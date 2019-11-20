@@ -106,20 +106,10 @@ public final class Summary {
             Date from, Date to) throws SQLException, IOException {
         ReportUtils.checkPeriodLimit(from, to);
         Collection<SummaryReport> summaries = getObjects(userId, deviceIds, groupIds, from, to);
-
-        String templatePath;
-        Path filePath= Paths.get("templates/export/" + "/summary_" + userId + ".xlsx");
-        if(Files.exists(filePath))
-        {
-             templatePath = Context.getConfig().getString("report.templatesPath",
-                    "templates/export/" + "/summary_" + userId + ".xlsx");
-        }
-        else
-        {
-            templatePath = Context.getConfig().getString("report.templatesPath",
-                    "templates/export/" + "/summary.xlsx");
-        }
-
+        Path excelTemplatePath= Paths.get("templates/export/summary_" + userId + ".xlsx");
+        String templatePath = Files.exists(excelTemplatePath) ? Context.getConfig().getString("report.templatesPath",
+                "templates/export/summary_" + userId + ".xlsx") : Context.getConfig().getString("report.templatesPath",
+                "templates/export/summary.xlsx");
         try (InputStream inputStream = new FileInputStream(templatePath)) {
             org.jxls.common.Context jxlsContext = ReportUtils.initializeContext(userId);
             jxlsContext.putVar("summaries", summaries);
