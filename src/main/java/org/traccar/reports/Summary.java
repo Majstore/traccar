@@ -106,7 +106,7 @@ public final class Summary {
             Date from, Date to) throws SQLException, IOException {
         ReportUtils.checkPeriodLimit(from, to);
         Collection<SummaryReport> summaries = getObjects(userId, deviceIds, groupIds, from, to);
-        Path excelTemplatePath= Paths.get("templates/export/summary_" + userId + ".xlsx");
+        Path excelTemplatePath = Paths.get("templates/export/summary_" + userId + ".xlsx");
         String templatePath = Files.exists(excelTemplatePath) ? Context.getConfig().getString("report.templatesPath",
                 "templates/export/summary_" + userId + ".xlsx") : Context.getConfig().getString("report.templatesPath",
                 "templates/export/summary.xlsx");
