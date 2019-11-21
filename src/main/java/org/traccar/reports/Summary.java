@@ -20,6 +20,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -103,9 +106,11 @@ public final class Summary {
             Date from, Date to) throws SQLException, IOException {
         ReportUtils.checkPeriodLimit(from, to);
         Collection<SummaryReport> summaries = getObjects(userId, deviceIds, groupIds, from, to);
-        String templatePath = Context.getConfig().getString("report.templatesPath",
-                "templates/export/");
-        try (InputStream inputStream = new FileInputStream(templatePath + "/summary.xlsx")) {
+        Path excelTemplatePath = Paths.get("templates/export/summary_" + userId + ".xlsx");
+        String templatePath = Files.exists(excelTemplatePath) ? Context.getConfig().getString("report.templatesPath",
+                "templates/export/summary_" + userId + ".xlsx") : Context.getConfig().getString("report.templatesPath",
+                "templates/export/summary.xlsx");
+        try (InputStream inputStream = new FileInputStream(templatePath)) {
             org.jxls.common.Context jxlsContext = ReportUtils.initializeContext(userId);
             jxlsContext.putVar("summaries", summaries);
             jxlsContext.putVar("from", from);
